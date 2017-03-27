@@ -1,0 +1,10 @@
+Package: AbstractPackage
+Type: Package
+Title: Classify abstract texts with Naive Bayes
+Version: 0.1.0
+Author: Newman Knowlton
+Maintainer: <newman.knowlton@mail.mcgill.ca>
+Description: It does naive bayes (see the README for more information)
+License: What license is it under?
+LazyData: TRUE
+RoxygenNote: 5.0.1

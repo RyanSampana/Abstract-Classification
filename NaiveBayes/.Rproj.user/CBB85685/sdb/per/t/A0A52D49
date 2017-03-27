@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Perform k-fold cross-validation\n#'\n#' @param func The function you'll be cross validating\n#' (in this case, testFunc()).\n#' @param N The size of the sample you want to use\n#' @param k The number of folds\n#' @param trainIn The training data over which you'll be cross validating.\n#' (Output from cleanData())\n#' @param trainOut The categories for the training data\n#' @param verbose Should the accuracy be printed after each iteration of the\n#' cross-validation procedure? (Defaults to TRUE so you won't your computer\n#' has crashed.)\n#' @param innerRes Should all k intermediate results for the individual cross-\n#' validations be returned? By default only the summary of all k-folds is\n#' returned because it's messy otherwise.\n#' @param ... Any additional arguments for func.\n#'\n#' @return By default a list with two elements is returned. The first is the\n#' summary confusion matrix and the second is the summary accuracy.\n#' If innerRes == TRUE, then a list with two \"sub\" lists is returned.\n#' The first \"sub\" list contains the default return value. The second \"sub\"\n#' list is a list of all the confusion matrices and accuracies for each\n#' individual iteration of the k-folds. These results are stored in a list\n#' for each\n#'\n#' A list of two elements. The first is a list containing the results\n#' from the confusion() function for every trial. The second is a list containing\n#' the summary of the results in the first list.\n#' @export\n#'\n#' @examples\n#' # crossValidation(testFunc,5000,10,cleanTrainIn,cleanTrainOut,\n#' # alpha = 0.01, diffuse = 0.9)\ncrossValidation <-\n  function(func, N, k, trainIn, trainOut, verbose = TRUE, innerRes = FALSE, ...) {\n    if (N > length(trainOut)) {\n      stop(\"You've asked for a smaple size larger than your sample\")\n    }\n    randSubSet <- sample(1:length(trainOut), N)\n    trainIn <- trainIn[randSubSet]\n    trainOut <- trainOut[randSubSet]\n    cvIndex <- getCVIndex(N, k)\n    funcRes <- list()\n    tempRes <- list()\n    for (i in 1:k) {\n      tempTrainIn  <- trainIn[-cvIndex[[i]]]\n      tempTrainOut <- trainOut[-cvIndex[[i]]]\n      tempTestIn   <- trainIn[cvIndex[[i]]]\n      tempTestOut  <- trainOut[cvIndex[[i]]]\n      funcRes[[i]] <-\n        func(tempTrainIn,\n             tempTrainOut,\n             tempTestIn,\n             tempTestOut,\n             ...)\n      if(verbose){\n        print(accuracy(funcRes[[i]]))\n      }\n    }\n    meanCon <- Reduce(\"+\", funcRes)\n    meanAcc <- accuracy(meanCon)\n    meanRes <- list(meanCon, meanAcc)\n    if(innerRes){\n      allAcc <- sapply(funcRes,accuracy)\n      allRes <- list(funcRes,allAcc)\n      return(list(meanRes,allRes))\n    }else{\n      return(meanRes)\n    }\n  }\n\n\n#' Helper for crossValidation\n#'\n#' This is a function called by the crossValidation() function to help it\n#' do its thing. This function has some of the other functions hard-coded\n#' into it, so it's not really useable.\n#'\n#' @param trainIn NA\n#' @param trainOut NA\n#' @param testIn NA\n#' @param testOut NA\n#' @param ... NA\n#'\n#' @return NA\n#' @export\n#'\n#' @examples\n#' # What\ntestFunc <-\n  function(trainIn,\n           trainOut,\n           testIn,\n           testOut,\n           ...) {\n    postProbs <- bayesProb(trainIn, trainOut, ...)\n    prediction <- bayesClassify(testIn, postProbs)\n    results <- confusion(prediction, testOut)\n    return(results)\n  }\n\n",
+    "created" : 1476383001627.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "439965854",
+    "id" : "A0A52D49",
+    "lastKnownWriteTime" : 1476497109,
+    "last_content_update" : 1476497109871,
+    "path" : "C:/Users/Renzo/Desktop/GradSchool/Comp551/Abstract Project/AbstractPackage/R/crossValidation.R",
+    "project_path" : "R/crossValidation.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

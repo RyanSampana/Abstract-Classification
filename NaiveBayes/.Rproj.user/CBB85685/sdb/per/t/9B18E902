@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Performs the full naive bayes procedure without the user having to know\n#' anything about the code.\n#'\n#' @return Returns the prediction (it also writes a file called\n#' \"test_out_runTest.csv\" to the working directory.)\n#' @export\n#'\n#' @examples\n#' # Ah\nrunTest <- function(){\n  ## Clean the data\n  cleanTrainIn <- cleanData(\"train_in.csv\")\n  cleanTestIn  <- cleanData(\"test_in.csv\")\n\n  trainOut <- read.csv(\"train_out.csv\",stringsAsFactors = FALSE)\n  cleanTrainOut <- factor(trainOut$category,levels = c(\"cs\",\"math\",\"physics\",\"stat\",\"category\"))\n\n  ## Get the likelihoods and priors (train)\n  fullBayes <- bayesProb(cleanTrainIn,cleanTrainOut,alpha=0.01,diffuse=0.8)\n\n  ## Make the predictions\n  prediction <- bayesClassify(cleanTestIn,fullBayes)\n\n  ## Write the prediction to a file\n  writeResults(prediction, \"test_out_runTest.csv\")\n\n  return(prediction)\n}\n\n#' Runs cross validation without the user having to know anything about the code\n#'\n#' @return See crossValidation()\n#' @export\n#'\n#' @examples\n#' # Bleh\nrunCV <- function(){\n  ## Clean the data\n  cleanTrainIn <- cleanData(\"train_in.csv\")\n\n  trainOut <- read.csv(\"train_out.csv\",stringsAsFactors = FALSE)\n  cleanTrainOut <- factor(trainOut$category,levels = c(\"cs\",\"math\",\"physics\",\"stat\",\"category\"))\n\n  ## Run Cross Validation\n  crossTest <- crossValidation(testFunc, 500, 10,\n                               cleanTrainIn, cleanTrainOut,\n                               alpha=0.01,diffuse=0.8)\n\n  return(crossTest)\n}\n",
+    "created" : 1476383031934.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1292828545",
+    "id" : "9B18E902",
+    "lastKnownWriteTime" : 1476472384,
+    "last_content_update" : 1476472384077,
+    "path" : "C:/Users/Renzo/Desktop/GradSchool/Comp551/Abstract Project/AbstractPackage/R/runAll.R",
+    "project_path" : "R/runAll.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

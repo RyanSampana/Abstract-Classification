@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Take a list of texts and classify them using naive Bayes\n#'\n#' Take a list of texts and try to classify them using naive bayes. The sum of\n#' the log-likelihoods of each word in each text in the list is computed\n#' for each category. The log-prior is added to each result. Each text\n#' is predicted to belong to the category with the maximal sum. (Words within\n#' the test texts that were not observed in training are ignored.)\n#'\n#' @param testSet A list of character vectors. (Output from cleanData())\n#' @param postList A list of two elements. The first is a data frame containing\n#' likelihoods (and evidence) and the second is a vector of prior probabilities.\n#' (This list is obtained from bayesProb().)\n#'\n#' @return A factor vector a prediction of either \"cs\", \"math\", \"physics\",\n#' or \"stat\" for each text provided in the testSet list.\n#' @export\n#'\n#' @examples\n#' #bayesClassify(cleanTestIn, bayesProbList)\nbayesClassify <- function(testSet,\n                          postList) {\n  likeProbs <- postList[[1]]\n  priorProbs <- postList[[2]]\n\n  loglikeProbs <- likeProbs\n  loglikeProbs[, 2:5] <- log(likeProbs[, 2:5])\n\n  logPrior <- log(priorProbs)\n\n  sumlogProb <- matrix(nrow = length(testSet), ncol = 4)\n  for (i in 1:length(testSet)) {\n    temp <- merge(testSet[[i]], loglikeProbs, by = 1, all.x = TRUE)\n    sumlogProb[i, ] <- colSums(temp[, 2:5], na.rm = TRUE) + logPrior\n  }\n\n  maxVec <- max.col(sumlogProb)\n  results <-\n    factor(\n      maxVec,\n      levels = c(1, 2, 3, 4),\n      labels = c(\"math\", \"cs\", \"physics\", \"stat\")\n    )\n  return(results)\n}\n\n#' Computes a confusion matrix for a set of predictions and their known true\n#' values\n#'\n#' @param predOut The prediction results as a vector. (Best if factor vector)\n#' @param realOut The real values as a vector. (Best if factor vector)\n#'\n#' @return The confusion matrix\n#' @export\n#'\n#' @examples\n#' # What\nconfusion <- function(predOut, realOut) {\n  return(table(predOut, realOut))\n}\n\n#' Computes the accuracy from a confusion matrix\n#'\n#' @param confusionMat A confusion matrix\n#'\n#' @return The accuracy of a prediction given by\n#' #-of-correct-predictions/total-#-of-predictions\n#' @export\n#'\n#' @examples\n#' #Yeah\naccuracy <- function(confusionMat){\n  return(sum(diag(confusionMat))/sum(confusionMat))\n}\n",
+    "created" : 1476382970850.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1966896083",
+    "id" : "619198F",
+    "lastKnownWriteTime" : 1476496634,
+    "last_content_update" : 1476496634408,
+    "path" : "C:/Users/Renzo/Desktop/GradSchool/Comp551/Abstract Project/AbstractPackage/R/bayesClassify.R",
+    "project_path" : "R/bayesClassify.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
